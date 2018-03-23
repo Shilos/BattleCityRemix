@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace ServerEngine
 {
-    public class Class1
-    {
-    }
+	
 }
