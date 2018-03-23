@@ -1,7 +1,0 @@
-D:\Projekts\C#\ttttt\ttttt\obj\Debug\TeemProjectPlan.csprojResolveAssemblyReference.cache
-D:\Projekts\C#\ttttt\ttttt\obj\Debug\TeemProjectPlan.csproj.CoreCompileInputs.cache
-D:\Projekts\C#\ttttt\ttttt\bin\Debug\ttttt.exe.config
-D:\Projekts\C#\ttttt\ttttt\bin\Debug\ttttt.exe
-D:\Projekts\C#\ttttt\ttttt\bin\Debug\ttttt.pdb
-D:\Projekts\C#\ttttt\ttttt\obj\Debug\ttttt.exe
-D:\Projekts\C#\ttttt\ttttt\obj\Debug\ttttt.pdb
