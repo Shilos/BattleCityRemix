@@ -1,1 +1,11 @@
 .vs/
+GameServer/obj/
+GameServer/bin/
+Common/obj/
+Common/bin/
+GameClient/obj/
+GameClient/bin/
+ServerEngine/obj/
+ServerEngine/bin/
+ClientEngine/obj/
+ClientEngine/bin/
