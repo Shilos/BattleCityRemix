@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TankiViewOpenPage"
         mc:Ignorable="d"
-        Height="400" Width="450">
+        Title="MainPage" Height="400" Width="450">
     <Window.Background>
         <ImageBrush ImageSource="begin1.jpg"/>
     </Window.Background>
@@ -19,7 +19,7 @@
             <ColumnDefinition Width="80*"/>
             <ColumnDefinition Width="20*"/>
         </Grid.ColumnDefinitions>
-        <ListView Grid.Column="0" Grid.Row="1" Opacity="10" Name="ConnectionList">
+        <ListView Grid.Column="0" Grid.Row="1" Opacity="50" Name="ConnectionList" Margin="10" Background="White" BorderBrush="#FF828790" Foreground="#FF042271">
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=RoomID}" Width="50">Room</GridViewColumn>
@@ -31,10 +31,10 @@
             </ListView.Resources>
         </ListView>
 
-        <TextBlock Grid.Column="1" Grid.Row="1" Margin="10, 5,0,0">User name</TextBlock>
+        <TextBlock Grid.Column="1" Grid.Row="1" Margin="10, 5">User name</TextBlock>
         <TextBox Grid.Column="1" Grid.Row="1" Height="20" Margin="10,25,10,140" Background="#FFDFEBFF"></TextBox>
         
-        <Button Grid.Column="0" Grid.Row="2" Width="55" Margin="10, 3.5, 290, 3.5" Background="#FF8CAC7A">Connect</Button>
-        <Button Grid.Column="0" Grid.Row="2" Width="55" Margin="290, 3.5, 10, 3.5" Background="#FF8CAC7A">Create</Button>
+        <Button Grid.Column="0" Grid.Row="2" Width="60" Margin="10, 3.5, 285, 3.5" Background="#FF8CAC7A">Connect</Button>
+        <Button Grid.Column="0" Grid.Row="2" Width="60" Margin="285, 3.5, 10, 3.5" Background="#FF8CAC7A">Create</Button>
     </Grid>
 </Window>

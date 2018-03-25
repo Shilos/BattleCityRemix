@@ -24,5 +24,13 @@ namespace TankiViewOpenPage
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MainPage form2 = new MainPage();
+
+            form2.Show();
+            
+        }
     }
 }
