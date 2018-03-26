@@ -10,3 +10,4 @@ ServerEngine/bin/
 ClientEngine/obj/
 ClientEngine/bin/
 /TankiViewOpenPage/obj/Debug
+TankiViewOpenPage/bin
