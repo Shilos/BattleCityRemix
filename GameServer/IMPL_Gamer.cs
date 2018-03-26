@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameServer
 {
-    public class Class1
+    class IMPL_Gamer
     {
     }
 }
