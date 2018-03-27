@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace Tanki
 {
-
+    //заглушки
     public interface IProtoclol
     {
 
