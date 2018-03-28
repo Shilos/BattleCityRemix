@@ -6,5 +6,5 @@
 
 
 		/// <summary> Названия команд (Red/Green)</summary>
-		public enum Teem { Red, Green }
+		public enum Team { Red, Green }
 }

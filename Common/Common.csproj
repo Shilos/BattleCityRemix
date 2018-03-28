@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adds_Common.cs" />
+    <Compile Include="IMPL_Common.cs" />
     <Compile Include="IMPL_Package.cs" />
     <Compile Include="IMPL_Serializator.cs" />
     <Compile Include="INTF_Common.cs" />
