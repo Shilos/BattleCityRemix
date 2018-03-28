@@ -9,5 +9,5 @@ ServerEngine/obj/
 ServerEngine/bin/
 ClientEngine/obj/
 ClientEngine/bin/
-/TankiViewOpenPage/obj/Debug
-TankiViewOpenPage/bin
+TankiViewOpenPage/obj/
+TankiViewOpenPage/bin/

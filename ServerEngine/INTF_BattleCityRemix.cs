@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerEngine
+namespace Tanki
 {
 	//заглушка
 	public interface IProtocol
