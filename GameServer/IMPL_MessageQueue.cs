@@ -14,13 +14,23 @@ namespace Tanki
     }
 
 
-    public class MessageQueue : IDisposable where T : class
+    public abstract class MessageQueueAbs : IMessageQueue
     {
-        private MessageQueue() { }
-        public MessageQueue(IServerEngine withEngine, Object data = null)
-        {
-            _serverEngine = withEngine;
-        }
+        private MessageQueueAbs() { }
+        public MessageQueueAbs(IServerEngine withEngine) { _serverEngine = withEngine; }
+
+        protected IServerEngine _serverEngine;
+        public abstract void RUN();
+        public abstract void Enqueue(IProtocol msg);
+        public abstract void Dispose();
+
+    }
+
+
+
+    public class MessageQueue_ProcessedOneByOne : MessageQueueAbs
+    { 
+        public MessageQueue_ProcessedOneByOne(IServerEngine withEngine, Object data = null) : base(withEngine) { }
 
         private Object _locker = new Object();
         private Object _locker_stopping = new Object();
@@ -29,7 +39,7 @@ namespace Tanki
         private AutoResetEvent _timer = new AutoResetEvent(false);
 
         //private MAK_MSG_proceed_method<T> _msg_proceed_method;
-        IServerEngine _serverEngine;
+
         private Queue<IProtocol> _msg_queue = new Queue<IProtocol>();
         private Thread _proceedingThread = null;
         private Boolean _enforceCancel = false;
@@ -38,7 +48,7 @@ namespace Tanki
         public Thread ProceedingThread { get { return _proceedingThread; } }
         public Boolean EnforceCancel { get { return _enforceCancel; } set { _enforceCancel = value; } }
 
-        public void Enqueue(IProtocol newMsg)
+        public override void Enqueue(IProtocol newMsg)
         {
             lock (_locker)
             {
@@ -49,14 +59,14 @@ namespace Tanki
             }
         }
 
-        public void RUN()
+        public override void RUN()
         {
-            _proceedingThread = new Thread(ProceedQueueOneByOne);
+            _proceedingThread = new Thread(ProceedQueue);
             _proceedingThread.Name = "SERVER_MSG_PROCEEDING";
             _proceedingThread.Start();
         }
 
-        private void ProceedQueueOneByOne()
+        private void ProceedQueue()
         {
             while (true)
             {
@@ -80,46 +90,10 @@ namespace Tanki
 
             }
 
-
-
             //_proceedMsg.Set();
         }
 
-
-        private void ProceedQueueByTimer()
-        {
-            while (true)
-            {
-                IProtocol msg = null;
-
-                lock (_locker)
-                {
-                    if (_enforceCancel)
-                        return;
-
-                    //это будет на callback timera
-                    //if (_msg_queue.Count > 0)
-                    //    msg = _msg_queue.Dequeue();
-                }
-
-                if (msg != null)
-                {
-                    //_serverEngine.ProcessMessage(msg); - НУЖНА ЕЩЕ РЕАЛИЗАЦИЯ ProcessMessage  c параметром 'просто единичный IProtocol'
-                    _timer.WaitOne();
-                }
-                else
-                    _ifReady.WaitOne();
-
-            }
-
-
-
-            //_proceedMsg.Set();
-        }
-
-
-
-        public void Dispose()
+        public override void Dispose()
         {
             lock (_locker_stopping)
             {
@@ -137,22 +111,17 @@ namespace Tanki
 
 
 
-    public class MessageQueueProcessedByTimer : IDisposable where T : class
+    public class MessageQueue_ProcessedByTimer : MessageQueueAbs
     {
-        private MessageQueueProcessedByTimer() { }
-        public MessageQueueProcessedByTimer(IServerEngine withEngine, Object data = null)
-        {
-            _serverEngine = withEngine;
-        }
+        public MessageQueue_ProcessedByTimer(IServerEngine withEngine, Object data = null) : base(withEngine) { }
 
         private Object _locker = new Object();
         private Object _locker_stopping = new Object();
         private AutoResetEvent _ifReady = new AutoResetEvent(false);
         private AutoResetEvent _proceedMsg = new AutoResetEvent(false);
-        //private AutoResetEvent _timer = new AutoResetEvent(false);
+        private AutoResetEvent _finish_timer = new AutoResetEvent(false);
 
         //private MAK_MSG_proceed_method<T> _msg_proceed_method;
-        IServerEngine _serverEngine;
         private Queue<IProtocol> _msg_queue = new Queue<IProtocol>();
         private Thread _proceedingThread = null;
         private Boolean _enforceCancel = false;
@@ -163,60 +132,66 @@ namespace Tanki
 
         private Timer _timer;
 
-        public void Enqueue(IProtocol newMsg)
+        public override void Enqueue(IProtocol newMsg)
         {
             lock (_locker)
             {
                 _msg_queue.Enqueue(newMsg);
-
-                var s = _proceedingThread.ThreadState;
-                //_ifReady.Set();
+                _ifReady.Set();
+                //var s = _proceedingThread.ThreadState;                
             }
         }
 
-        public void RUN()
+        public override void RUN()
         {
             //_proceedingThread = new Thread(ProceedQueue);
             //_proceedingThread.Name = "SERVER_MSG_PROCEEDING";
             //_proceedingThread.Start();
             _timer = new Timer(ProceedQueue,_ifReady, 0, 1000);
-
+            _finish_timer.WaitOne();            
         }
 
         private void ProceedQueue(Object state)
         {
-            while (true)
+            IProtocol msg = null;
+            List<IProtocol> recieved_packages_batch = new List<IProtocol>();
+
+            lock (_locker)
             {
-                IProtocol msg = null;
-
-                lock (_locker)
+                if (_enforceCancel)
                 {
-                    if (_enforceCancel)
-                        return;
-
-                    if (_msg_queue.Count > 0)
-                        msg = _msg_queue.Dequeue();
+                    _finish_timer.Set();
+                    return;
                 }
 
-                if (msg != null)
-                {
-                    //_serverEngine.ProcessMessage(msg); - НУЖНА ЕЩЕ РЕАЛИЗАЦИЯ ProcessMessage  c параметром 'просто единичный IProtocol'
-                }
-                else
-                    _ifReady.WaitOne();
+                _ifReady.WaitOne();
 
+
+                while (_msg_queue.Count>0)
+                {
+                    msg = _msg_queue.Dequeue();
+                    recieved_packages_batch.Add(msg);
+                }
             }
+                        
 
-            //_proceedMsg.Set();
+            if (recieved_packages_batch != null)
+            {
+                _serverEngine.ProcessMessage(recieved_packages_batch);
+            }
+            else
+                _ifReady.WaitOne();
+
         }
 
 
-        public void Dispose()
+        public override void Dispose()
         {
             lock (_locker_stopping)
             {
                 _enforceCancel = true;
-                _proceedingThread.Join();
+                //_proceedingThread.Join();
+                _timer.Dispose();
 
                 _ifReady.Close();
                 _ifReady.Dispose();
@@ -227,6 +202,27 @@ namespace Tanki
         }
     }
 
+
+    public class MessageQueueFabric : IMessageQueueFabric
+    {
+        public IMessageQueue CreateMessageQueue(MsgQueueType queueType,IServerEngine withEngine)
+        {
+            IMessageQueue instance = null;
+
+            switch (queueType)
+            {
+                case MsgQueueType.mqByTimerProcc:
+                    instance = new MessageQueue_ProcessedByTimer(withEngine);
+                    break;
+                case MsgQueueType.mqOneByOneProcc:
+                default:
+                    instance = new MessageQueue_ProcessedOneByOne(withEngine);
+                    break;
+            }
+
+            return instance;
+        }
+    }
 
 
 
