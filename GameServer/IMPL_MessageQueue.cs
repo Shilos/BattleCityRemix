@@ -118,7 +118,9 @@ namespace Tanki
         private Object _locker = new Object();
         private Object _locker_stopping = new Object();
         private AutoResetEvent _ifReady = new AutoResetEvent(false);
-        private AutoResetEvent _proceedMsg = new AutoResetEvent(false);
+        private AutoResetEvent _ifEnqueReady = new AutoResetEvent(false);
+
+        //private AutoResetEvent _proceedMsg = new AutoResetEvent(false);
         private AutoResetEvent _finish_timer = new AutoResetEvent(false);
 
         //private MAK_MSG_proceed_method<T> _msg_proceed_method;
@@ -127,7 +129,7 @@ namespace Tanki
         private Boolean _enforceCancel = false;
 
         //public MAK_MSG_proceed_method<T> MsgProceedMethod { get { return _msg_proceed_method; } }
-        public Thread ProceedingThread { get { return _proceedingThread; } }
+        //public Thread ProceedingThread { get { return _proceedingThread; } }
         public Boolean EnforceCancel { get { return _enforceCancel; } set { _enforceCancel = value; } }
 
         private Timer _timer;
@@ -136,6 +138,7 @@ namespace Tanki
         {
             lock (_locker)
             {
+                _ifEnqueReady.WaitOne();
                 _msg_queue.Enqueue(newMsg);
                 _ifReady.Set();
                 //var s = _proceedingThread.ThreadState;                
@@ -147,6 +150,7 @@ namespace Tanki
             //_proceedingThread = new Thread(ProceedQueue);
             //_proceedingThread.Name = "SERVER_MSG_PROCEEDING";
             //_proceedingThread.Start();
+            _ifEnqueReady.Set();
             _timer = new Timer(ProceedQueue,_ifReady, 0, 1000);
             _finish_timer.WaitOne();            
         }
@@ -166,7 +170,7 @@ namespace Tanki
 
                 _ifReady.WaitOne();
 
-
+                
                 while (_msg_queue.Count>0)
                 {
                     msg = _msg_queue.Dequeue();
