@@ -5,7 +5,7 @@ using System.Text;
 using System.Drawing;
 using System.Threading.Tasks;
 
-namespace ServerEngine
+namespace Tanki
 {
 	public class ServerEngine : IServerEngine
 	{
