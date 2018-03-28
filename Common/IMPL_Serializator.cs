@@ -3,11 +3,11 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Tanki
 {
-	/// <summary> Сереализатор. Используется в ISender, IReceiver. </summary>
-	class Serializator : ISerializator
+	/// <summary> Бинарный сериализатор. Используется в ISender, IReceiver. </summary>
+	public class BinSerializator : ISerializator
 	{
-		/// <summary> Де-Сереализатор </summary>
-		/// <param name="bytes"> Масив байт требующий Де-Сереализации</param>
+		/// <summary> Де-Сериализатор </summary>
+		/// <param name="bytes"> Масив байт требующий Де-Сериализации</param>
 		/// <returns> IPackage </returns>
 		public IPackage Deserialize(byte[] bytes)
 		{
@@ -22,8 +22,8 @@ namespace Tanki
 
 
 
-		/// <summary> Сереализатор </summary>
-		/// <param name="obj"> Объект требующий Сереализации</param>
+		/// <summary> Сериализатор </summary>
+		/// <param name="obj"> Объект требующий Сериализации</param>
 		/// <returns> Возвращает массив байт </returns>
 		public byte[] Serialize(object obj)
 		{
