@@ -41,7 +41,7 @@ namespace Tanki
     }
 
 
-    public interface IMessageQueue:IDisposable
+    public interface IMessageQueue : IDisposable
     {
         //IEnumerable<IProtoclol> Queue {get;}
         //Timer Timer { get; }

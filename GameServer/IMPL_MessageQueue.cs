@@ -119,6 +119,7 @@ namespace Tanki
         private Object _locker_stopping = new Object();
         private AutoResetEvent _ifReady = new AutoResetEvent(false);
         private AutoResetEvent _ifEnqueReady = new AutoResetEvent(false);
+        private AutoResetEvent _ifDequeReady = new AutoResetEvent(false);
 
         //private AutoResetEvent _proceedMsg = new AutoResetEvent(false);
         private AutoResetEvent _finish_timer = new AutoResetEvent(false);
@@ -139,8 +140,12 @@ namespace Tanki
             lock (_locker)
             {
                 _ifEnqueReady.WaitOne();
-                _msg_queue.Enqueue(newMsg);
-                _ifReady.Set();
+                _ifDequeReady.Reset();
+                lock(_msg_queue)
+                {
+                    _ifReady.Set();
+                }
+                _ifDequeReady.Set();
                 //var s = _proceedingThread.ThreadState;                
             }
         }
@@ -170,14 +175,15 @@ namespace Tanki
 
                 _ifReady.WaitOne();
 
-                
+                _ifDequeReady.WaitOne();
+                _ifEnqueReady.Reset();
                 while (_msg_queue.Count>0)
                 {
                     msg = _msg_queue.Dequeue();
                     recieved_packages_batch.Add(msg);
                 }
+                _ifEnqueReady.Set();
             }
-                        
 
             if (recieved_packages_batch != null)
             {
@@ -199,8 +205,13 @@ namespace Tanki
 
                 _ifReady.Close();
                 _ifReady.Dispose();
-                _proceedMsg.Close();
-                _proceedMsg.Dispose();
+
+                _ifEnqueReady.Close();
+                _ifEnqueReady.Dispose();
+
+                _ifDequeReady.Close();
+                _ifDequeReady.Dispose();
+
                 _msg_queue = null;
             }
         }
