@@ -44,6 +44,7 @@ namespace Tanki
 		bool Can_Shoot { get; set; }
 		bool Is_Alive { get; set; }
 		bool Can_Be_Destroyed { get; set; }
+        int Speed { get; set; }
 	}
 
 
@@ -58,7 +59,7 @@ namespace Tanki
 	public interface ITank : IEntity
 	{
 		int Lives { get; set; }
-		Teem Teem { get; set; }
+		Team Team { get; set; }
 	}
 
 
@@ -82,7 +83,10 @@ namespace Tanki
 	/// Используется в интерфейсах IServerEngine и IClientEngine.
 	/// Реализующий клас обязан иметь атрибут [Serializable]
 	/// </summary>
-	public interface IBlock : IEntity { }
+	public interface IBlock : IEntity
+    {
+
+    }
 
 
 
