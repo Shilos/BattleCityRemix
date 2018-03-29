@@ -10,35 +10,26 @@ using System.Threading;
 
 namespace Tanki
 {
-    //заглушки
-    public interface IProtoclol
-    {
+ 
 
-    }
+    //public interface IGamer
+    //{
+    //    String id { get; set; }
+    //    Socket Socket { get; set; }
+    //}
 
-    public interface ISender
-    {
+    //public interface IGameRoom
+    //{
+    //    String RoomId { get; set; }
+    //    Socket RoomListner { get; }
+    //    IEnumerable<IGamer> Gamers { get; }
+    //    void AddGamer(IGamer newGamer);
 
-    }
+    //    IMessageQueue MessageQueue { get; }
+    //    ISender Sender { get; }
+    //    void RUN();
 
-    public interface IGamer
-    {
-        String id { get; set; }
-        Socket Socket { get; set; }
-    }
-
-    public interface IGameRoom
-    {
-        String RoomId { get; set; }
-        Socket RoomListner { get; }
-        IEnumerable<IGamer> Gamers { get; }
-        void AddGamer(IGamer newGamer);
-
-        IMessageQueue MessageQueue { get; }
-        ISender Sender { get; }
-        void RUN();
-
-    }
+    //}
 
 
     //public interface IMessageQueue : IDisposable
@@ -65,7 +56,7 @@ namespace Tanki
     public interface IServer
     {
         Socket ServerListner { get; }
-        IEnumerable<IGameRoom> Rooms { get; }
+        IEnumerable<IRoom> Rooms { get; }
 
 
     }
