@@ -41,25 +41,25 @@ namespace Tanki
     }
 
 
-    public interface IMessageQueue : IDisposable
-    {
-        //IEnumerable<IProtoclol> Queue {get;}
-        //Timer Timer { get; }
-        void Enqueue(IProtocol msg);
-        void RUN();
+    //public interface IMessageQueue : IDisposable
+    //{
+    //    //IEnumerable<IProtoclol> Queue {get;}
+    //    //Timer Timer { get; }
+    //    void Enqueue(IProtocol msg);
+    //    void RUN();
 
-    }
+    //}
 
-    public enum MsgQueueType
-    {
-        mqOneByOneProcc,
-        mqByTimerProcc
-    }
+    //public enum MsgQueueType
+    //{
+    //    mqOneByOneProcc,
+    //    mqByTimerProcc
+    //}
 
-    public interface IMessageQueueFabric
-    {
-        IMessageQueue CreateMessageQueue(MsgQueueType queueType, IServerEngine withEngine);
-    }
+    //public interface IMessageQueueFabric
+    //{
+    //    IMessageQueue CreateMessageQueue(MsgQueueType queueType, IServerEngine withEngine);
+    //}
 
 
     public interface IServer

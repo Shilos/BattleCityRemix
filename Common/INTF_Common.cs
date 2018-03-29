@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Tanki
@@ -100,16 +101,51 @@ namespace Tanki
 	public interface IReceiver { }
 
 
+    #region MessageQueue Interfaces
+    /// <summary> Интерфейс описывает очередь сообщений клиента/сервера </summary>
+    public interface IMessageQueue : IDisposable
+    {
+        void Enqueue(IPackage msg);
+        void RUN();
+    }
 
-	/// <summary> Интерфейс описывает очередь сообщений клиента/сервера </summary>
-	public interface IMesegeQueue { }
+    public enum MsgQueueType
+    {
+        mqOneByOneProcc,
+        mqByTimerProcc
+    }
+
+    public interface IMessageQueueFabric
+    {
+        IMessageQueue CreateMessageQueue(MsgQueueType queueType, IEngine withEngine);
+    }
+
+    #endregion MessageQueue Interfaces
+
+
+    #region IEngine
+    /// <summary> Общий Интерфейс для движков (серверного и клиентского
+    /// должен передаватся как dependency MessageQueue (поэтому определяется сдесь для исключения циклических ссылок библиотек)
+    /// реализации будут в разных библиотеках, т.к. это разные реализации для разных приложений
+
+    public delegate void ProcessMessageHandler(IPackage message);
+    public delegate void ProcessMessagesHandler(IEnumerable<IPackage> messages);
+
+    public interface IEngine
+    {
+        ProcessMessageHandler ProcessMessage { get; }
+        ProcessMessagesHandler ProcessMessages { get; }
+    }
+
+    #endregion
 
 
 
-	/// <summary> Пакет данных - играет роль сообщения между клинтом/сервером.
-	/// Используется в IMesegeQueue, ISender, IReceiver</summary>
-	/// Реализующий клас обязан иметь атрибут [Serializable]
-	public interface IPackage
+
+    /// <summary> Пакет данных - играет роль сообщения между клинтом/сервером.
+    /// Используется в IMesegeQueue, ISender, IReceiver</summary>
+    /// Реализующий клас обязан иметь атрибут [Serializable]
+    public interface IPackage
 	{
 		string Sender_id { get; set; }
 		object Data { get; set; }

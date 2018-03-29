@@ -47,7 +47,9 @@
     <Compile Include="IMPL_Common.cs" />
     <Compile Include="IMPL_Package.cs" />
     <Compile Include="IMPL_Serializator.cs" />
+    <Compile Include="IMPL__MessageQueue.cs" />
     <Compile Include="INTF_Common.cs" />
+    <Compile Include="INTF_LibDependcy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

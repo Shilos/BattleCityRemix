@@ -7,42 +7,44 @@ using System.Threading.Tasks;
 
 namespace Tanki
 {
-	public class ServerEngine : IServerEngine
-	{
-		public ProcessMessageHandler ProcessMessage { get; }
-		private IRoom _room;
-		private IList<IProtocol> processList = new List<IProtocol>();
+    public class ServerGameEngine : ServerEngineAbs
+    {
+        public override ProcessMessageHandler ProcessMessage { get; protected set; }
+        public override ProcessMessagesHandler ProcessMessages { get; protected set; }
+		//private IRoom _room;
+		private IList<IPackage> processList = new List<IPackage>();
 		private List<IEntity> objects;
-		public ServerEngine(IRoom room)
+		public ServerGameEngine(IRoom room):base(room)
 		{
-			this.ProcessMessage = MessageHandler;
-			this._room = room;
+			this.ProcessMessages += MessagesHandler;
+            this.ProcessMessage = null;
+			//this._room = room;
 		}
 
-		public IProtocol CheckWin()
+		public IPackage CheckWin()
 		{
 			throw new NotImplementedException();
 		}
-		private void MessageHandler(IEnumerable<IProtocol> list)
+		private void MessagesHandler(IEnumerable<IPackage> list)
 		{
-			processList = new List<IProtocol>();
+			processList = new List<IPackage>();
 			foreach(var t in list)
 			{
 				
 			}
 		}
 
-		public IProtocol Death(int id)
+		public IPackage Death(int id)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IProtocol Fire(int id)
+		public IPackage Fire(int id)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IProtocol GenerateMap()
+		public IPackage GenerateMap()
 		{
 			objects = new List<IEntity>();
 			int colIndMin = 0;
@@ -50,7 +52,7 @@ namespace Tanki
 			int rowIndMin = 0;
 			int rowIndMax = 20;
 			int decorCount = 10;
-			int players = _room.gamerList.Count();
+			int players = this.Room.Gamers.Count();
 			while(players>0&&decorCount>0)
 			{
 				Random colInd = new Random(DateTime.Now.Millisecond - 15);
@@ -71,21 +73,21 @@ namespace Tanki
 				}
 			}
 
-			var x = objects as IProtocol;
+			var x = objects as IPackage;
 			return x;
 		}
 
-		public IProtocol Move(int id)
+		public IPackage Move(int id)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IProtocol Reload(int id)
+		public IPackage Reload(int id)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IEnumerable<IProtocol> Send()
+		public IEnumerable<IPackage> Send()
 		{
 			throw new NotImplementedException();
 		}
