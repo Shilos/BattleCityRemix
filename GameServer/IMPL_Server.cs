@@ -12,12 +12,13 @@ namespace Tanki
 
         private GameServer(IListener listener)
         {
-            ServerListner = listener;
-            Rooms = new List<IRoom>();
+            ServerListner = listener;            
         }
 
+        private List<IRoom> _rooms = new List<IRoom>();
+
         public IListener ServerListner { get; private set; }
-        public IEnumerable<IRoom> Rooms { get; private set; }
+        public IEnumerable<IRoom> Rooms { get { return _rooms; } }
 
         public override void OnNewConnectionHandler(object Sender, NewConnectionData evntData)
         {
@@ -26,7 +27,11 @@ namespace Tanki
 
         public void RUN()
         {
-            throw new NotImplementedException();
+            IRoom managerRoom = null;
+            _rooms.Add(managerRoom);
+            managerRoom.RUN();
+
+            ServerListner.RUN();
         }
     }
 }
