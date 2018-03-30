@@ -12,7 +12,8 @@ namespace Tanki
 
         private GameServer(IListener listener)
         {
-            ServerListner = listener;            
+            ServerListner = listener;
+            RegisterListener(ServerListner);
         }
 
         private List<IRoom> _rooms = new List<IRoom>();
