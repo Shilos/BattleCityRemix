@@ -26,7 +26,8 @@ namespace Common
 
         public GameEntity()
         {
-
+            // nothing
+            // nothing++
         }
 
         public GameEntity(bool CanShoot, bool CanDestroy, bool IsAlive, int Speed, Point Position,Direction Direction)
